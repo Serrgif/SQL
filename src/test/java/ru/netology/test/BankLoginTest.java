@@ -35,5 +35,24 @@ class BankLoginTest {
         loginPage.validLogin(authInfo);
         loginPage.verifyErrorNotification("Ошибка! Неверно указан логин или пароль");
     }
+    @Test
+    @DisplayName("Неверно указан код верификации")
+    void shouldInvalidCodes() {
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        verificationPage.veryfyVerificationPageVisiblity();
+        var verificationCode = DataHelper.generateRandomVerificationCode();
+        verificationPage.verify(verificationCode.getCode());
+        verificationPage.verifyErrorNotification("Ошибка! Неверно указан код! Попробуйте ещё раз.");
+    }
+    @Test
+    @DisplayName("Успешный вход")
+    void shouldSuccessfulLogin() {
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        verificationPage.veryfyVerificationPageVisiblity();
+        var verificationCode = SQLHelper.getVerificationCode();
+        verificationPage.validVerify(verificationCode.getCode());
+    }
 
 }
